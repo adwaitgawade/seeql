@@ -15,21 +15,21 @@ const TableNode = React.memo(function TableNode({ data }: TableNodeProps) {
   return (
     <div className="min-w-[320px] rounded-md border border-zinc-700 bg-zinc-900 shadow-sm overflow-hidden relative">
       {/* Header */}
-      <div className="bg-zinc-800 text-white px-3 py-2">
+      <div className="bg-zinc-950 text-white px-3 py-2">
         <div className="text-sm font-semibold">
           {schemaName ? `${schemaName}.${tableName}` : tableName}
         </div>
       </div>
 
       {/* Columns */}
-      <div className="divide-y divide-zinc-800">
+      <div className="divide-y divide-zinc-800 border-[0.1px] border-zinc-700 bg-black">
         {columns.map((col) => {
           const TypeIcon = getTypeIcon(col.type);
 
           return (
             <div
               key={col.name}
-              className="relative flex items-center gap-2 px-3 py-1.5 text-xs"
+              className="relative flex items-center gap-2 px-3 py-1.5 text-sm"
             >
               {/* Left handle (target) */}
               <Handle

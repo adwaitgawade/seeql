@@ -109,9 +109,7 @@ const DiagramTab = React.memo(function DiagramTab() {
             className="bg-zinc-950"
           >
             <Background className="bg-zinc-950" />
-            <Controls
-              className="!bg-zinc-900 !border !border-zinc-700 !rounded-lg"
-            />
+            <Controls />
             <MiniMap
               className="!bg-zinc-900 !border !border-zinc-700 !rounded-lg"
               nodeColor={() => '#3f3f46'}
