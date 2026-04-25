@@ -53,63 +53,41 @@ export function getEdgeParams(
 ): EdgeParams {
   const sourceWidth = sourceNode.measured?.width ?? sourceNode.width ?? NODE_WIDTH;
   const targetWidth = targetNode.measured?.width ?? targetNode.width ?? NODE_WIDTH;
-  const sourceHeight = sourceNode.measured?.height ?? sourceNode.height ?? 120;
-  const targetHeight = targetNode.measured?.height ?? targetNode.height ?? 120;
 
   const sourceCenterX = sourceNode.position.x + sourceWidth / 2;
   const targetCenterX = targetNode.position.x + targetWidth / 2;
-  const sourceCenterY = sourceNode.position.y + sourceHeight / 2;
-  const targetCenterY = targetNode.position.y + targetHeight / 2;
 
   const dx = targetCenterX - sourceCenterX;
-  const dy = targetCenterY - sourceCenterY;
 
-  // Get column Y positions for left/right attachments
-  const sourceColY = getColumnHandlePosition(sourceNode, sourceColumn, 'right').y;
-  const targetColY = getColumnHandlePosition(targetNode, targetColumn, 'left').y;
+  // Always attach from left or right side of the column row
+  let sourceSide: 'left' | 'right';
+  let targetSide: 'left' | 'right';
+  let sourcePosition: Position;
+  let targetPosition: Position;
 
-  let sx: number, sy: number, tx: number, ty: number;
-  let sourcePosition: Position, targetPosition: Position;
-
-  if (Math.abs(dx) > Math.abs(dy)) {
-    // Horizontal relationship — attach to column rows on left/right sides
-    if (dx > 0) {
-      // Target is to the right
-      sx = sourceNode.position.x + sourceWidth;
-      sy = sourceColY;
-      tx = targetNode.position.x;
-      ty = targetColY;
-      sourcePosition = Position.Right;
-      targetPosition = Position.Left;
-    } else {
-      // Target is to the left
-      sx = sourceNode.position.x;
-      sy = sourceColY;
-      tx = targetNode.position.x + targetWidth;
-      ty = targetColY;
-      sourcePosition = Position.Left;
-      targetPosition = Position.Right;
-    }
+  if (dx >= 0) {
+    // Target is to the right (or directly above/below)
+    sourceSide = 'right';
+    targetSide = 'left';
+    sourcePosition = Position.Right;
+    targetPosition = Position.Left;
   } else {
-    // Vertical relationship — attach to top/bottom center of nodes
-    if (dy > 0) {
-      // Target is below
-      sx = sourceCenterX;
-      sy = sourceNode.position.y + sourceHeight;
-      tx = targetCenterX;
-      ty = targetNode.position.y;
-      sourcePosition = Position.Bottom;
-      targetPosition = Position.Top;
-    } else {
-      // Target is above
-      sx = sourceCenterX;
-      sy = sourceNode.position.y;
-      tx = targetCenterX;
-      ty = targetNode.position.y + targetHeight;
-      sourcePosition = Position.Top;
-      targetPosition = Position.Bottom;
-    }
+    // Target is to the left
+    sourceSide = 'left';
+    targetSide = 'right';
+    sourcePosition = Position.Left;
+    targetPosition = Position.Right;
   }
 
-  return { sx, sy, tx, ty, sourcePosition, targetPosition };
+  const sourcePos = getColumnHandlePosition(sourceNode, sourceColumn, sourceSide);
+  const targetPos = getColumnHandlePosition(targetNode, targetColumn, targetSide);
+
+  return {
+    sx: sourcePos.x,
+    sy: sourcePos.y,
+    tx: targetPos.x,
+    ty: targetPos.y,
+    sourcePosition,
+    targetPosition,
+  };
 }

@@ -90,7 +90,7 @@ describe('floating-edge utility', () => {
       expect(params.tx).toBe(220); // target right edge
     });
 
-    it('returns bottom→top when vertically stacked with same X', () => {
+    it('returns right→left even when vertically stacked with same X', () => {
       const source = makeMockNode('users', { x: 0, y: 0 }, [
         { name: 'team_id', type: 'int', constraints: [] },
       ]);
@@ -99,8 +99,11 @@ describe('floating-edge utility', () => {
       ]);
 
       const params = getEdgeParams(source, 'team_id', target, 'id');
-      expect(params.sourcePosition).toBe(Position.Bottom);
-      expect(params.targetPosition).toBe(Position.Top);
+      // Always left/right — never top/bottom
+      expect(params.sourcePosition).toBe(Position.Right);
+      expect(params.targetPosition).toBe(Position.Left);
+      expect(params.sx).toBe(220); // source right edge
+      expect(params.tx).toBe(0);   // target left edge
     });
   });
 });
