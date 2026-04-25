@@ -78,7 +78,7 @@ const FloatingRelationshipEdge = React.memo(function FloatingRelationshipEdge(
             transform: `translate(-50%, -50%) translate(${labelX}px, ${labelY}px)`,
             pointerEvents: 'all',
           }}
-          className="bg-white text-slate-500 text-[10px] border border-slate-200 shadow-sm px-1.5 py-0.5 rounded"
+          className="bg-zinc-900 text-zinc-300 text-[10px] border border-zinc-700 shadow-sm px-1.5 py-0.5 rounded"
         >
           {edgeData?.relationType}
         </div>

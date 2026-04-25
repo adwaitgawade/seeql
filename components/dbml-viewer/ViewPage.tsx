@@ -69,24 +69,24 @@ export default function ViewPage() {
   };
 
   return (
-    <div className="flex flex-col h-screen">
+    <div className="flex flex-col h-screen bg-background text-foreground">
       {/* Header */}
-      <header className="flex items-center justify-between p-4 border-b">
+      <header className="flex items-center justify-between p-4 border-b border-border">
         <h1 className="text-xl font-bold">DBML Viewer</h1>
         <InputTypeToggle />
         <ExportButton />
       </header>
 
       {/* Tabs */}
-      <div className="flex border-b">
+      <div className="flex border-b border-border">
         <button
           type="button"
           onClick={() => handleTabChange('editor')}
           className={[
             'px-4 py-2 text-sm transition-colors',
             activeTab === 'editor'
-              ? 'border-b-2 border-slate-900 text-slate-900 font-medium'
-              : 'text-slate-500 hover:text-slate-700',
+              ? 'border-b-2 border-zinc-100 text-zinc-100 font-medium'
+              : 'text-zinc-500 hover:text-zinc-300',
           ].join(' ')}
         >
           Editor
@@ -97,8 +97,8 @@ export default function ViewPage() {
           className={[
             'px-4 py-2 text-sm transition-colors',
             activeTab === 'diagram'
-              ? 'border-b-2 border-slate-900 text-slate-900 font-medium'
-              : 'text-slate-500 hover:text-slate-700',
+              ? 'border-b-2 border-zinc-100 text-zinc-100 font-medium'
+              : 'text-zinc-500 hover:text-zinc-300',
           ].join(' ')}
         >
           Diagram

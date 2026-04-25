@@ -14,7 +14,7 @@ const InputTypeToggle = React.memo(function InputTypeToggle() {
   ];
 
   return (
-    <div className="inline-flex rounded-lg border border-slate-200 bg-slate-50 p-1">
+    <div className="inline-flex rounded-lg border border-zinc-700 bg-zinc-900 p-1">
       {options.map((option) => {
         const isActive = inputType === option.value;
 
@@ -26,8 +26,8 @@ const InputTypeToggle = React.memo(function InputTypeToggle() {
             className={[
               'px-3 py-1 text-sm font-medium rounded-md transition-colors',
               isActive
-                ? 'bg-white shadow-sm text-slate-900'
-                : 'text-slate-500 hover:text-slate-700',
+                ? 'bg-zinc-800 shadow-sm text-zinc-100'
+                : 'text-zinc-500 hover:text-zinc-300',
             ].join(' ')}
           >
             {option.label}

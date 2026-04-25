@@ -106,12 +106,15 @@ const DiagramTab = React.memo(function DiagramTab() {
             fitView
             minZoom={0.1}
             maxZoom={2}
-            className="bg-slate-50"
+            className="bg-zinc-950"
           >
-            <Background />
-            <Controls />
+            <Background className="bg-zinc-950" />
+            <Controls
+              className="!bg-zinc-900 !border !border-zinc-700 !rounded-lg"
+            />
             <MiniMap
-              className="!bg-white !border !border-slate-200 !rounded-lg"
+              className="!bg-zinc-900 !border !border-zinc-700 !rounded-lg"
+              nodeColor={() => '#3f3f46'}
             />
           </ReactFlow>
 
@@ -129,7 +132,7 @@ const DiagramTab = React.memo(function DiagramTab() {
           <TableDetailsPanel />
         </>
       ) : (
-        <div className="flex flex-col items-center justify-center h-full text-slate-400">
+        <div className="flex flex-col items-center justify-center h-full text-zinc-500">
           <p className="text-lg font-medium">No diagram to display</p>
           <p className="text-sm mt-1">Enter a schema in the editor and click Parse to visualize</p>
         </div>

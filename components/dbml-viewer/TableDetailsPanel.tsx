@@ -8,15 +8,15 @@ import type { TableNodeData } from '@/types/viewer';
 function getConstraintBadgeClass(constraint: string): string {
   switch (constraint) {
     case 'primary key':
-      return 'bg-red-50 text-red-700 border-red-200';
+      return 'bg-amber-950 text-amber-400 border-amber-800';
     case 'foreign key':
-      return 'bg-blue-50 text-blue-700 border-blue-200';
+      return 'bg-blue-950 text-blue-400 border-blue-800';
     case 'unique':
-      return 'bg-purple-50 text-purple-700 border-purple-200';
+      return 'bg-emerald-950 text-emerald-400 border-emerald-800';
     case 'not null':
-      return 'bg-amber-50 text-amber-700 border-amber-200';
+      return 'bg-red-950 text-red-400 border-red-800';
     default:
-      return 'bg-slate-50 text-slate-700 border-slate-200';
+      return 'bg-zinc-800 text-zinc-300 border-zinc-700';
   }
 }
 
@@ -79,7 +79,7 @@ const TableDetailsPanel = React.memo(function TableDetailsPanel() {
     <div
       ref={panelRef}
       className={
-        'absolute top-0 right-0 h-full w-[300px] bg-white border-l border-slate-200 shadow-lg z-40 transform transition-transform duration-200 ease-in-out overflow-y-auto ' +
+        'absolute top-0 right-0 h-full w-[300px] bg-zinc-900 border-l border-zinc-700 shadow-lg z-40 transform transition-transform duration-200 ease-in-out overflow-y-auto ' +
         (isOpen ? 'translate-x-0' : 'translate-x-full')
       }
       aria-hidden={!isOpen}
@@ -88,13 +88,13 @@ const TableDetailsPanel = React.memo(function TableDetailsPanel() {
         <div className="p-4">
           {/* Header */}
           <div className="flex items-center justify-between mb-4">
-            <h2 className="text-base font-semibold text-slate-900 truncate">
+            <h2 className="text-base font-semibold text-zinc-100 truncate">
               {table.schemaName ? `${table.schemaName}.${table.tableName}` : table.tableName}
             </h2>
             <button
               type="button"
               onClick={() => setSelectedTable(null)}
-              className="text-slate-400 hover:text-slate-600 p-1"
+              className="text-zinc-500 hover:text-zinc-300 p-1"
               aria-label="Close panel"
             >
               <X className="size-4" />
@@ -104,20 +104,20 @@ const TableDetailsPanel = React.memo(function TableDetailsPanel() {
           {/* Columns */}
           {table.columns && table.columns.length > 0 && (
             <div className="mb-6">
-              <h3 className="text-xs font-semibold uppercase tracking-wider text-slate-500 mb-2">
+              <h3 className="text-xs font-semibold uppercase tracking-wider text-zinc-500 mb-2">
                 Columns
               </h3>
               <div className="space-y-2">
                 {table.columns.map((col) => (
                   <div
                     key={col.name}
-                    className="rounded-md border border-slate-200 p-2.5"
+                    className="rounded-md border border-zinc-700 p-2.5"
                   >
                     <div className="flex items-center justify-between mb-1">
-                      <span className="text-sm font-medium text-slate-800">
+                      <span className="text-sm font-medium text-zinc-200">
                         {col.name}
                       </span>
-                      <span className="text-xs text-slate-500">{col.type}</span>
+                      <span className="text-xs text-zinc-500">{col.type}</span>
                     </div>
                     {col.constraints.length > 0 && (
                       <div className="flex flex-wrap gap-1 mt-1">
@@ -135,7 +135,7 @@ const TableDetailsPanel = React.memo(function TableDetailsPanel() {
                       </div>
                     )}
                     {col.defaultValue && (
-                      <div className="text-[11px] text-slate-500 mt-1">
+                      <div className="text-[11px] text-zinc-500 mt-1">
                         Default: {col.defaultValue}
                       </div>
                     )}
@@ -148,26 +148,26 @@ const TableDetailsPanel = React.memo(function TableDetailsPanel() {
           {/* Indexes */}
           {table.indexes && table.indexes.length > 0 && (
             <div className="mb-6">
-              <h3 className="text-xs font-semibold uppercase tracking-wider text-slate-500 mb-2">
+              <h3 className="text-xs font-semibold uppercase tracking-wider text-zinc-500 mb-2">
                 Indexes
               </h3>
               <div className="space-y-2">
                 {table.indexes.map((idx) => (
                   <div
                     key={idx.name}
-                    className="rounded-md border border-slate-200 p-2.5"
+                    className="rounded-md border border-zinc-700 p-2.5"
                   >
                     <div className="flex items-center justify-between mb-1">
-                      <span className="text-sm font-medium text-slate-800">
+                      <span className="text-sm font-medium text-zinc-200">
                         {idx.name}
                       </span>
                       {idx.unique && (
-                        <span className="inline-flex items-center px-1.5 py-0.5 text-[10px] font-medium border rounded bg-purple-50 text-purple-700 border-purple-200">
+                        <span className="inline-flex items-center px-1.5 py-0.5 text-[10px] font-medium border rounded bg-emerald-950 text-emerald-400 border-emerald-800">
                           Unique
                         </span>
                       )}
                     </div>
-                    <div className="text-xs text-slate-500">
+                    <div className="text-xs text-zinc-500">
                       {idx.columns.join(', ')}
                     </div>
                   </div>
@@ -179,10 +179,10 @@ const TableDetailsPanel = React.memo(function TableDetailsPanel() {
           {/* Notes */}
           {table.notes && (
             <div className="mb-4">
-              <h3 className="text-xs font-semibold uppercase tracking-wider text-slate-500 mb-2">
+              <h3 className="text-xs font-semibold uppercase tracking-wider text-zinc-500 mb-2">
                 Notes
               </h3>
-              <p className="text-sm text-slate-700 whitespace-pre-wrap">
+              <p className="text-sm text-zinc-300 whitespace-pre-wrap">
                 {table.notes}
               </p>
             </div>

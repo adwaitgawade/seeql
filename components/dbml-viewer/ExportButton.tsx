@@ -63,26 +63,27 @@ const ExportButton = React.memo(function ExportButton() {
         onClick={() => setOpen((prev) => !prev)}
         aria-haspopup="menu"
         aria-expanded={open}
+        className="border-zinc-700 bg-zinc-900 text-zinc-100 hover:bg-zinc-800 hover:text-zinc-100"
       >
         <Download className="size-4" />
         Export
       </Button>
       {open && (
-        <div className="absolute right-0 mt-1 w-40 rounded-md border border-slate-200 bg-white shadow-lg z-50">
+        <div className="absolute right-0 mt-1 w-40 rounded-md border border-zinc-700 bg-zinc-900 shadow-lg z-50">
           <button
             type="button"
             onClick={handleExportPng}
-            className="flex w-full items-center gap-2 px-3 py-2 text-sm text-slate-700 hover:bg-slate-50 first:rounded-t-md"
+            className="flex w-full items-center gap-2 px-3 py-2 text-sm text-zinc-300 hover:bg-zinc-800 first:rounded-t-md"
           >
-            <ImageIcon className="size-4 text-slate-500" />
+            <ImageIcon className="size-4 text-zinc-500" />
             Export as PNG
           </button>
           <button
             type="button"
             onClick={handleExportSvg}
-            className="flex w-full items-center gap-2 px-3 py-2 text-sm text-slate-700 hover:bg-slate-50 last:rounded-b-md"
+            className="flex w-full items-center gap-2 px-3 py-2 text-sm text-zinc-300 hover:bg-zinc-800 last:rounded-b-md"
           >
-            <FileCode className="size-4 text-slate-500" />
+            <FileCode className="size-4 text-zinc-500" />
             Export as SVG
           </button>
         </div>

@@ -22,19 +22,19 @@ const SearchBar = React.memo(function SearchBar() {
 
   return (
     <div className="relative w-[240px]">
-      <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 size-4 text-slate-400 pointer-events-none" />
+      <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 size-4 text-zinc-500 pointer-events-none" />
       <Input
         type="text"
         placeholder="Search tables..."
         value={searchQuery}
         onChange={handleChange}
-        className="pl-9 pr-8 bg-white border shadow-sm"
+        className="pl-9 pr-8 bg-zinc-900 border-zinc-700 text-zinc-100 placeholder:text-zinc-600 shadow-sm"
       />
       {searchQuery && (
         <button
           type="button"
           onClick={handleClear}
-          className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
+          className="absolute right-2.5 top-1/2 -translate-y-1/2 text-zinc-500 hover:text-zinc-300"
           aria-label="Clear search"
         >
           <X className="size-4" />
