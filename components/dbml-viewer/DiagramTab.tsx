@@ -16,7 +16,7 @@ import '@xyflow/react/dist/style.css';
 import { useViewerStore } from '@/lib/store/viewer-store';
 import { transformDBMLToFlow } from '@/lib/transformers/dbml-to-flow';
 import { transformSQLToFlow } from '@/lib/transformers/sql-to-flow';
-import { applyDagreLayout } from '@/lib/layout/dagre-layout';
+import { applyGridLayout } from '@/lib/layout/grid-layout';
 import type { TableNodeData, RelationshipEdgeData } from '@/types/viewer';
 
 import TableNode from './TableNode';
@@ -58,7 +58,7 @@ const DiagramTab = React.memo(function DiagramTab() {
       result = transformDBMLToFlow(parsedSchema.tables, parsedSchema.relationships);
     }
 
-    const laidOut = applyDagreLayout(result.nodes, result.edges);
+    const laidOut = applyGridLayout(result.nodes, result.edges);
     setNodes(laidOut.nodes);
     setEdges(laidOut.edges);
   }, [parsedSchema, inputType, setNodes, setEdges]);
