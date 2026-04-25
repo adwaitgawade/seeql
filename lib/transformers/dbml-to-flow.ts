@@ -23,8 +23,8 @@ export function transformDBMLToFlow(
       source: sourceTable,
       target: targetTable,
       type: 'relationshipEdge',
-      sourceHandle: `${sourceCol}-right`,
-      targetHandle: `${targetCol}-left`,
+      sourceHandle: 'bottom',
+      targetHandle: 'top',
       data: rel,
     };
   });

@@ -32,8 +32,8 @@ describe('sql-to-flow transformer', () => {
     expect(edges).toHaveLength(1);
     expect(edges[0].source).toBe('users');
     expect(edges[0].target).toBe('teams');
-    expect(edges[0].sourceHandle).toBe('team_id-right');
-    expect(edges[0].targetHandle).toBe('id-left');
+    expect(edges[0].sourceHandle).toBe('bottom');
+    expect(edges[0].targetHandle).toBe('top');
   });
 
   it('should find table for unqualified source column name', () => {

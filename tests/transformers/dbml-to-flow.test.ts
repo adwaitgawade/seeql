@@ -45,8 +45,8 @@ describe('dbml-to-flow transformer', () => {
     expect(edge.source).toBe('users');
     expect(edge.target).toBe('teams');
     expect(edge.type).toBe('relationshipEdge');
-    expect(edge.sourceHandle).toBe('team_id-right');
-    expect(edge.targetHandle).toBe('id-left');
+    expect(edge.sourceHandle).toBe('bottom');
+    expect(edge.targetHandle).toBe('top');
     expect(edge.data?.relationType).toBe('N:1');
   });
 
