@@ -21,12 +21,16 @@ import type { TableNodeData, RelationshipEdgeData } from '@/types/viewer';
 
 import TableNode from './TableNode';
 import RelationshipEdge from './RelationshipEdge';
+import FloatingRelationshipEdge from './FloatingRelationshipEdge';
 import SearchBar from './SearchBar';
 import ExportButton from './ExportButton';
 import TableDetailsPanel from './TableDetailsPanel';
 
 const nodeTypes = { tableNode: TableNode };
-const edgeTypes = { relationshipEdge: RelationshipEdge };
+const edgeTypes = {
+  relationshipEdge: RelationshipEdge,
+  floatingRelationshipEdge: FloatingRelationshipEdge,
+};
 
 const DiagramTab = React.memo(function DiagramTab() {
   const parsedSchema = useViewerStore((state) => state.parsedSchema);
