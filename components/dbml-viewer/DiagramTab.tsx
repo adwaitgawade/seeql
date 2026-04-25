@@ -17,7 +17,7 @@ import { useViewerStore } from '@/lib/store/viewer-store';
 import { transformDBMLToFlow } from '@/lib/transformers/dbml-to-flow';
 import { transformSQLToFlow } from '@/lib/transformers/sql-to-flow';
 import { applyGridLayout } from '@/lib/layout/grid-layout';
-import type { TableNodeData, RelationshipEdgeData } from '@/types/viewer';
+import type { TableNodeData, RelationshipEdgeData, InputType, ParsedSchema } from '@/types/viewer';
 
 import TableNode from './TableNode';
 import RelationshipEdge from './RelationshipEdge';
@@ -32,11 +32,19 @@ const edgeTypes = {
   floatingRelationshipEdge: FloatingRelationshipEdge,
 };
 
-const DiagramTab = React.memo(function DiagramTab() {
-  const parsedSchema = useViewerStore((state) => state.parsedSchema);
-  const inputType = useViewerStore((state) => state.inputType);
+interface DiagramTabProps {
+  schema?: ParsedSchema | null;
+  inputType?: InputType;
+}
+
+const DiagramTab = React.memo(function DiagramTab({ schema: propSchema, inputType: propInputType }: DiagramTabProps) {
+  const storeSchema = useViewerStore((state) => state.parsedSchema);
+  const storeInputType = useViewerStore((state) => state.inputType);
   const searchQuery = useViewerStore((state) => state.searchQuery);
   const setSelectedTable = useViewerStore((state) => state.setSelectedTable);
+
+  const parsedSchema = propSchema !== undefined ? propSchema : storeSchema;
+  const inputType = propInputType !== undefined ? propInputType : storeInputType;
 
   const [nodes, setNodes, onNodesChange] = useNodesState<Node<TableNodeData>>([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState<Edge<RelationshipEdgeData>>([]);
