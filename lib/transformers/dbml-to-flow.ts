@@ -22,9 +22,9 @@ export function transformDBMLToFlow(
       id: `edge-${index}`,
       source: sourceTable,
       target: targetTable,
-      type: 'relationshipEdge',
-      sourceHandle: 'bottom',
-      targetHandle: 'top',
+      type: 'floatingRelationshipEdge',
+      sourceHandle: `${sourceCol}-right`,
+      targetHandle: `${targetCol}-left`,
       data: rel,
     };
   });

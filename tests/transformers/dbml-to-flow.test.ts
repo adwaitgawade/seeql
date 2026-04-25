@@ -38,15 +38,15 @@ describe('dbml-to-flow transformer', () => {
     expect(nodes[1].type).toBe('tableNode');
   });
 
-  it('should transform relationships to edges with correct source/target and handles', () => {
+  it('should transform relationships to edges with correct source/target and column handles', () => {
     const { edges } = transformDBMLToFlow(tables, relationships);
     expect(edges).toHaveLength(1);
     const edge = edges[0];
     expect(edge.source).toBe('users');
     expect(edge.target).toBe('teams');
-    expect(edge.type).toBe('relationshipEdge');
-    expect(edge.sourceHandle).toBe('bottom');
-    expect(edge.targetHandle).toBe('top');
+    expect(edge.type).toBe('floatingRelationshipEdge');
+    expect(edge.sourceHandle).toBe('team_id-right');
+    expect(edge.targetHandle).toBe('id-left');
     expect(edge.data?.relationType).toBe('N:1');
   });
 
