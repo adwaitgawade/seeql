@@ -5,7 +5,7 @@ import { Code } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
-export default function Home() {
+export default async function Home() {
   return (
     <main className="min-h-screen bg-background">
       <div className="container max-w-6xl mx-auto px-4 py-16">
