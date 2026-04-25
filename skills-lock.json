@@ -21,6 +21,11 @@
       "sourceType": "github",
       "computedHash": "db85045827ebeb83ac8dbc992b69188755eeb74dcf01cbf5e694d58aa494a106"
     },
+    "react-flow": {
+      "source": "framara/react-flow-skill",
+      "sourceType": "github",
+      "computedHash": "f3da56cd9a3eeeb6befbbe306f8152847ac7bd60e44de2743592e1ce071ebcc5"
+    },
     "shadcn": {
       "source": "shadcn/ui",
       "sourceType": "github",
