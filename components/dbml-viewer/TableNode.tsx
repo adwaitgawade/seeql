@@ -13,14 +13,6 @@ const TableNode = React.memo(function TableNode({ data }: TableNodeProps) {
 
   return (
     <div className="min-w-[180px] rounded-md border border-slate-300 bg-white shadow-sm overflow-hidden relative">
-      {/* Top handle (target) — for incoming edges from above */}
-      <Handle
-        type="target"
-        position={Position.Top}
-        id="top"
-        className="!opacity-0 !w-3 !h-3"
-      />
-
       {/* Header */}
       <div className="bg-slate-800 text-white px-3 py-2">
         <div className="text-sm font-semibold">
@@ -79,13 +71,6 @@ const TableNode = React.memo(function TableNode({ data }: TableNodeProps) {
         })}
       </div>
 
-      {/* Bottom handle (source) — for outgoing edges to below */}
-      <Handle
-        type="source"
-        position={Position.Bottom}
-        id="bottom"
-        className="!opacity-0 !w-3 !h-3"
-      />
     </div>
   );
 });
