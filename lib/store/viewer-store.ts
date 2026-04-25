@@ -8,7 +8,7 @@ export interface ViewerState {
   parseError: string | null;
   selectedTable: string | null;
   searchQuery: string;
-  activeTab: 'editor' | 'diagram';
+  activeTab: 'editor' | 'diagram' | 'compare';
 
   setInputText: (text: string) => void;
   setInputType: (type: InputType) => void;
@@ -16,7 +16,7 @@ export interface ViewerState {
   setParseError: (error: string | null) => void;
   setSelectedTable: (table: string | null) => void;
   setSearchQuery: (query: string) => void;
-  setActiveTab: (tab: 'editor' | 'diagram') => void;
+  setActiveTab: (tab: 'editor' | 'diagram' | 'compare') => void;
   clear: () => void;
 }
 
