@@ -2,20 +2,38 @@
 
 import React from 'react';
 import { Handle, Position } from '@xyflow/react';
-import type { TableNodeData } from '@/types/viewer';
+import type { TableNodeData, DiffStatus } from '@/types/viewer';
 import { getTypeIcon, getConstraintIcon, constraintBadges } from '@/lib/utils/column-icons';
 
 interface TableNodeProps {
   data: TableNodeData;
 }
 
+function tableBorderClass(status?: DiffStatus): string {
+  if (status === 'added') return 'border-green-500';
+  if (status === 'removed') return 'border-red-500';
+  return 'border-zinc-700';
+}
+
+function tableHeaderClass(status?: DiffStatus): string {
+  if (status === 'added') return 'bg-green-950 text-green-100';
+  if (status === 'removed') return 'bg-red-950 text-red-100';
+  return 'bg-zinc-950 text-white';
+}
+
+function columnRowClass(status?: DiffStatus): string {
+  if (status === 'added') return 'border-l-4 border-green-500 bg-green-950/30 text-green-200';
+  if (status === 'removed') return 'border-l-4 border-red-500 bg-red-950/30 text-red-200';
+  return 'text-zinc-200';
+}
+
 const TableNode = React.memo(function TableNode({ data }: TableNodeProps) {
-  const { tableName, schemaName, columns } = data;
+  const { tableName, schemaName, columns, diffStatus } = data;
 
   return (
-    <div className="min-w-[320px] rounded-md border border-zinc-700 bg-zinc-900 shadow-sm overflow-hidden relative">
+    <div className={`min-w-[320px] rounded-md border shadow-sm overflow-hidden relative ${tableBorderClass(diffStatus)} bg-zinc-900`}>
       {/* Header */}
-      <div className="bg-zinc-950 text-white px-3 py-2">
+      <div className={`px-3 py-2 ${tableHeaderClass(diffStatus)}`}>
         <div className="text-sm font-semibold">
           {schemaName ? `${schemaName}.${tableName}` : tableName}
         </div>
@@ -25,11 +43,12 @@ const TableNode = React.memo(function TableNode({ data }: TableNodeProps) {
       <div className="divide-y divide-zinc-800 border-[0.1px] border-zinc-700 bg-black">
         {columns.map((col) => {
           const TypeIcon = getTypeIcon(col.type);
+          const rowClass = columnRowClass(col.diffStatus);
 
           return (
             <div
               key={col.name}
-              className="relative flex items-center gap-2 px-3 py-1.5 text-sm"
+              className={`relative flex items-center gap-2 px-3 py-1.5 text-sm ${rowClass}`}
             >
               {/* Left handle (target) */}
               <Handle
@@ -45,7 +64,7 @@ const TableNode = React.memo(function TableNode({ data }: TableNodeProps) {
               )}
 
               {/* Column name */}
-              <span className="font-medium text-zinc-200 truncate">
+              <span className="font-medium truncate">
                 {col.name}
               </span>
 
