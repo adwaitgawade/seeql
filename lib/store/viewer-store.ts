@@ -8,7 +8,13 @@ export interface ViewerState {
   parseError: string | null;
   selectedTable: string | null;
   searchQuery: string;
-  activeTab: 'editor' | 'diagram' | 'compare';
+  activeTab: 'editor' | 'diagram' | 'compare' | 'compare-diagram';
+
+  // Compare feature state
+  compareOldText: string;
+  compareNewText: string;
+  compareSchema: ParsedSchema | null;
+  compareError: string | null;
 
   setInputText: (text: string) => void;
   setInputType: (type: InputType) => void;
@@ -16,7 +22,13 @@ export interface ViewerState {
   setParseError: (error: string | null) => void;
   setSelectedTable: (table: string | null) => void;
   setSearchQuery: (query: string) => void;
-  setActiveTab: (tab: 'editor' | 'diagram' | 'compare') => void;
+  setActiveTab: (tab: 'editor' | 'diagram' | 'compare' | 'compare-diagram') => void;
+
+  setCompareOldText: (text: string) => void;
+  setCompareNewText: (text: string) => void;
+  setCompareSchema: (schema: ParsedSchema | null) => void;
+  setCompareError: (error: string | null) => void;
+
   clear: () => void;
 }
 
@@ -28,6 +40,10 @@ const initialState = {
   selectedTable: null,
   searchQuery: '',
   activeTab: 'editor' as const,
+  compareOldText: '',
+  compareNewText: '',
+  compareSchema: null,
+  compareError: null,
 };
 
 export const useViewerStore = create<ViewerState>((set) => ({
@@ -52,6 +68,11 @@ export const useViewerStore = create<ViewerState>((set) => ({
   setSearchQuery: (query) => set({ searchQuery: query }),
 
   setActiveTab: (tab) => set({ activeTab: tab }),
+
+  setCompareOldText: (text) => set({ compareOldText: text }),
+  setCompareNewText: (text) => set({ compareNewText: text }),
+  setCompareSchema: (schema) => set({ compareSchema: schema }),
+  setCompareError: (error) => set({ compareError: error }),
 
   clear: () => set(initialState),
 }));

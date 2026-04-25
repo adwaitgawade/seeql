@@ -1,28 +1,31 @@
 'use client';
 
-import React, { useState } from 'react';
+import React from 'react';
 import { Textarea } from '@/components/ui/textarea';
 import { parseDBML } from '@/lib/parsers/dbml-parser';
 import { compareSchemas } from '@/lib/diff/schema-diff';
-import type { ParsedSchema } from '@/types/viewer';
-import DiagramTab from './DiagramTab';
+import { useViewerStore } from '@/lib/store/viewer-store';
 
 const CompareTab = React.memo(function CompareTab() {
-  const [oldText, setOldText] = useState('');
-  const [newText, setNewText] = useState('');
-  const [compareError, setCompareError] = useState<string | null>(null);
-  const [mergedSchema, setMergedSchema] = useState<ParsedSchema | null>(null);
+  const oldText = useViewerStore((state) => state.compareOldText);
+  const newText = useViewerStore((state) => state.compareNewText);
+  const compareError = useViewerStore((state) => state.compareError);
+  const setCompareOldText = useViewerStore((state) => state.setCompareOldText);
+  const setCompareNewText = useViewerStore((state) => state.setCompareNewText);
+  const setCompareSchema = useViewerStore((state) => state.setCompareSchema);
+  const setCompareError = useViewerStore((state) => state.setCompareError);
+  const setActiveTab = useViewerStore((state) => state.setActiveTab);
 
   const handleCompare = () => {
     setCompareError(null);
-    setMergedSchema(null);
+    setCompareSchema(null);
 
     if (!oldText.trim() && !newText.trim()) {
       return;
     }
 
-    let oldSchema: ParsedSchema;
-    let newSchema: ParsedSchema;
+    let oldSchema;
+    let newSchema;
 
     try {
       oldSchema = oldText.trim() ? parseDBML(oldText) : { tables: [], relationships: [] };
@@ -39,7 +42,8 @@ const CompareTab = React.memo(function CompareTab() {
     }
 
     const merged = compareSchemas(oldSchema, newSchema);
-    setMergedSchema(merged);
+    setCompareSchema(merged);
+    setActiveTab('compare-diagram');
   };
 
   return (
@@ -50,7 +54,7 @@ const CompareTab = React.memo(function CompareTab() {
           <label className="text-xs font-semibold text-zinc-400 mb-2 uppercase tracking-wider">Old DBML</label>
           <Textarea
             value={oldText}
-            onChange={(e) => setOldText(e.target.value)}
+            onChange={(e) => setCompareOldText(e.target.value)}
             placeholder="Paste the old DBML schema here..."
             className="flex-1 min-h-0 font-mono text-sm resize-none bg-zinc-900 text-zinc-100 border-zinc-700 placeholder:text-zinc-600"
           />
@@ -59,7 +63,7 @@ const CompareTab = React.memo(function CompareTab() {
           <label className="text-xs font-semibold text-zinc-400 mb-2 uppercase tracking-wider">New DBML</label>
           <Textarea
             value={newText}
-            onChange={(e) => setNewText(e.target.value)}
+            onChange={(e) => setCompareNewText(e.target.value)}
             placeholder="Paste the new DBML schema here..."
             className="flex-1 min-h-0 font-mono text-sm resize-none bg-zinc-900 text-zinc-100 border-zinc-700 placeholder:text-zinc-600"
           />
@@ -78,11 +82,6 @@ const CompareTab = React.memo(function CompareTab() {
         {compareError && (
           <div className="text-sm text-red-400">{compareError}</div>
         )}
-      </div>
-
-      {/* Diagram */}
-      <div className="flex-1 overflow-hidden">
-        <DiagramTab schema={mergedSchema} inputType="dbml" />
       </div>
     </div>
   );
