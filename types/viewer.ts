@@ -1,11 +1,14 @@
 export type Constraint = 'primary key' | 'foreign key' | 'unique' | 'not null';
 
+export type DiffStatus = 'added' | 'removed' | 'unchanged';
+
 export interface Column {
   name: string;
   type: string;
   constraints: Constraint[];
   defaultValue?: string;
   notes?: string;
+  diffStatus?: DiffStatus;
 }
 
 export interface Index {
@@ -20,6 +23,7 @@ export type TableNodeData = Record<string, unknown> & {
   columns: Column[];
   indexes: Index[];
   notes?: string;
+  diffStatus?: DiffStatus;
 };
 
 export type RelationshipType = '1:1' | '1:N' | 'N:1';
@@ -28,6 +32,7 @@ export type RelationshipEdgeData = Record<string, unknown> & {
   relationType: RelationshipType;
   sourceColumn: string;
   targetColumn: string;
+  diffStatus?: DiffStatus;
 };
 
 export type InputType = 'dbml' | 'postgresql';
