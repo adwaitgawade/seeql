@@ -13,7 +13,7 @@ const TableNode = React.memo(function TableNode({ data }: TableNodeProps) {
   const { tableName, schemaName, columns } = data;
 
   return (
-    <div className="min-w-[180px] rounded-md border border-slate-300 bg-white shadow-sm overflow-hidden relative">
+    <div className="min-w-[320px] rounded-md border border-slate-300 bg-white shadow-sm overflow-hidden relative">
       {/* Header */}
       <div className="bg-slate-800 text-white px-3 py-2">
         <div className="text-sm font-semibold">
@@ -51,6 +51,9 @@ const TableNode = React.memo(function TableNode({ data }: TableNodeProps) {
 
               {/* Constraint badges + type */}
               <div className="ml-auto flex items-center gap-1.5 shrink-0">
+                <span className="text-slate-400 truncate uppercase">
+                  {col.type}
+                </span>
                 {col.constraints.map((constraint) => {
                   const Icon = getConstraintIcon([constraint]);
                   const badge = constraintBadges[constraint];
@@ -75,9 +78,6 @@ const TableNode = React.memo(function TableNode({ data }: TableNodeProps) {
 
                   return null;
                 })}
-                <span className="text-slate-400 truncate uppercase">
-                  {col.type}
-                </span>
               </div>
 
               {/* Right handle (source) */}

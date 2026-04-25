@@ -32,9 +32,9 @@ describe('grid layout', () => {
 
     // First row: 4 nodes side by side
     expect(positioned[0].position.x).toBe(0);
-    expect(positioned[1].position.x).toBe(300); // 220 + 80
-    expect(positioned[2].position.x).toBe(600); // 220 + 80 + 220 + 80
-    expect(positioned[3].position.x).toBe(900);
+    expect(positioned[1].position.x).toBe(440); // 320 + 120
+    expect(positioned[2].position.x).toBe(880); // 320 + 120 + 320 + 120
+    expect(positioned[3].position.x).toBe(1320);
     expect(positioned[0].position.y).toBe(0);
     expect(positioned[1].position.y).toBe(0);
     expect(positioned[2].position.y).toBe(0);

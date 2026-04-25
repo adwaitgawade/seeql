@@ -7,9 +7,9 @@ import { TableNodeData, RelationshipEdgeData } from '@/types/viewer';
  */
 export const GRID_COLUMNS = 4;
 
-const NODE_WIDTH = 220;
-const HORIZONTAL_GAP = 80;
-const VERTICAL_GAP = 60;
+const NODE_WIDTH = 320;
+const HORIZONTAL_GAP = 120;
+const VERTICAL_GAP = 80;
 
 function getNodeHeight(node: Node<TableNodeData>): number {
   const columnCount = node.data.columns?.length || 0;
