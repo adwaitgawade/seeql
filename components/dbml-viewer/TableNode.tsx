@@ -3,7 +3,7 @@
 import React from 'react';
 import { Handle, Position } from '@xyflow/react';
 import type { TableNodeData } from '@/types/viewer';
-import { getTypeIcon, getConstraintIcon } from '@/lib/utils/column-icons';
+import { getTypeIcon, getConstraintIcon, constraintBadges } from '@/lib/utils/column-icons';
 
 interface TableNodeProps {
   data: TableNodeData;
@@ -24,18 +24,7 @@ const TableNode = React.memo(function TableNode({ data }: TableNodeProps) {
       {/* Columns */}
       <div className="divide-y divide-slate-100">
         {columns.map((col) => {
-          const isPK = col.constraints.includes('primary key');
-          const isFK = col.constraints.includes('foreign key');
-          const isNotNull = col.constraints.includes('not null');
-
           const TypeIcon = getTypeIcon(col.type);
-          const ConstraintIcon = getConstraintIcon(col.constraints);
-
-          // Constraint icon color
-          let constraintColor = 'text-slate-400';
-          if (isPK) constraintColor = 'text-amber-500';
-          else if (isFK) constraintColor = 'text-blue-500';
-          else if (isNotNull) constraintColor = 'text-red-500';
 
           return (
             <div
@@ -60,11 +49,32 @@ const TableNode = React.memo(function TableNode({ data }: TableNodeProps) {
                 {col.name}
               </span>
 
-              {/* Constraint icon + type */}
+              {/* Constraint badges + type */}
               <div className="ml-auto flex items-center gap-1.5 shrink-0">
-                {ConstraintIcon && (
-                  <ConstraintIcon className={`w-3 h-3 ${constraintColor}`} />
-                )}
+                {col.constraints.map((constraint) => {
+                  const Icon = getConstraintIcon([constraint]);
+                  const badge = constraintBadges[constraint];
+
+                  if (Icon) {
+                    let color = 'text-slate-400';
+                    if (constraint === 'primary key') color = 'text-amber-500';
+                    else if (constraint === 'foreign key') color = 'text-blue-500';
+                    return <Icon key={constraint} className={`w-3 h-3 ${color}`} />;
+                  }
+
+                  if (badge) {
+                    return (
+                      <span
+                        key={constraint}
+                        className={`text-[9px] font-bold ${badge.colorClass}`}
+                      >
+                        {badge.label}
+                      </span>
+                    );
+                  }
+
+                  return null;
+                })}
                 <span className="text-slate-400 truncate uppercase">
                   {col.type}
                 </span>

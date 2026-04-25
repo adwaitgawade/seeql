@@ -31,6 +31,17 @@ export const constraintIcons: Record<string, LucideIcon> = {
 };
 
 /**
+ * Text badges for constraints that don't have a dedicated icon.
+ */
+export const constraintBadges: Record<
+  string,
+  { label: string; colorClass: string }
+> = {
+  'not null': { label: 'NN', colorClass: 'text-red-500' },
+  'unique': { label: 'UQ', colorClass: 'text-emerald-500' },
+};
+
+/**
  * Map of column type names (lowercase) to their corresponding Lucide icons.
  */
 export const typeIcons: Record<string, LucideIcon> = {
