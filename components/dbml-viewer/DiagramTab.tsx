@@ -34,8 +34,8 @@ const DiagramTab = React.memo(function DiagramTab() {
   const searchQuery = useViewerStore((state) => state.searchQuery);
   const setSelectedTable = useViewerStore((state) => state.setSelectedTable);
 
-  const [nodes, setNodes, onNodesChange] = useNodesState<TableNodeData>([]);
-  const [edges, setEdges, onEdgesChange] = useEdgesState<RelationshipEdgeData>([]);
+  const [nodes, setNodes, onNodesChange] = useNodesState<Node<TableNodeData>>([]);
+  const [edges, setEdges, onEdgesChange] = useEdgesState<Edge<RelationshipEdgeData>>([]);
 
   const hasData = parsedSchema && parsedSchema.tables.length > 0;
 
