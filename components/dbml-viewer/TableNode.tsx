@@ -55,7 +55,7 @@ const TableNode = React.memo(function TableNode({ data }: TableNodeProps) {
                 type="target"
                 position={Position.Left}
                 id={`${col.name}-left`}
-                className="!opacity-0 !w-2 !h-2"
+                className="opacity-0! w-2! h-2!"
               />
 
               {/* Type icon */}
@@ -104,7 +104,7 @@ const TableNode = React.memo(function TableNode({ data }: TableNodeProps) {
                 type="source"
                 position={Position.Right}
                 id={`${col.name}-right`}
-                className="!opacity-0 !w-2 !h-2"
+                className="opacity-0! w-2! h-2!"
               />
             </div>
           );

@@ -119,7 +119,7 @@ const DiagramTab = React.memo(function DiagramTab({ schema: propSchema, inputTyp
             <Background className="bg-zinc-950" />
             <Controls />
             <MiniMap
-              className="!bg-zinc-900 !border !border-zinc-700 !rounded-lg"
+              className="bg-zinc-900! border! border-zinc-700! rounded-lg!"
               nodeColor={() => '#3f3f46'}
             />
           </ReactFlow>
