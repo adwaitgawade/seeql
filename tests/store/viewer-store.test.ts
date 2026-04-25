@@ -3,6 +3,7 @@ import { useViewerStore } from '@/lib/store/viewer-store';
 
 describe('viewer store', () => {
   beforeEach(() => {
+    localStorage.clear();
     useViewerStore.getState().clear();
   });
 
@@ -83,5 +84,30 @@ describe('viewer store', () => {
     expect(state.selectedTable).toBeNull();
     expect(state.searchQuery).toBe('');
     expect(state.activeTab).toBe('editor');
+  });
+
+  it('should persist input text to localStorage', () => {
+    useViewerStore.getState().setInputText('table users { id int }');
+    const stored = JSON.parse(localStorage.getItem('dbml-viewer-store') || '{}');
+    expect(stored.state.inputText).toBe('table users { id int }');
+  });
+
+  it('should persist compare texts to localStorage', () => {
+    useViewerStore.getState().setCompareOldText('old schema');
+    useViewerStore.getState().setCompareNewText('new schema');
+    const stored = JSON.parse(localStorage.getItem('dbml-viewer-store') || '{}');
+    expect(stored.state.compareOldText).toBe('old schema');
+    expect(stored.state.compareNewText).toBe('new schema');
+  });
+
+  it('should clear persisted values on clear', () => {
+    useViewerStore.getState().setInputText('text');
+    useViewerStore.getState().setCompareOldText('old');
+    useViewerStore.getState().setCompareNewText('new');
+    useViewerStore.getState().clear();
+    const stored = JSON.parse(localStorage.getItem('dbml-viewer-store') || '{}');
+    expect(stored.state.inputText).toBe('');
+    expect(stored.state.compareOldText).toBe('');
+    expect(stored.state.compareNewText).toBe('');
   });
 });

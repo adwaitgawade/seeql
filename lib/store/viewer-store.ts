@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+import { persist } from 'zustand/middleware';
 import { InputType, ParsedSchema } from '@/types/viewer';
 
 export interface ViewerState {
@@ -46,33 +47,50 @@ const initialState = {
   compareError: null,
 };
 
-export const useViewerStore = create<ViewerState>((set) => ({
-  ...initialState,
+const STORAGE_KEY = 'dbml-viewer-store';
 
-  setInputText: (text) => set({ inputText: text }),
+export const useViewerStore = create<ViewerState>()(
+  persist(
+    (set) => ({
+      ...initialState,
 
-  setInputType: (type) =>
-    set({
-      inputType: type,
-      inputText: '',
-      parsedSchema: null,
-      parseError: null,
+      setInputText: (text) => set({ inputText: text }),
+
+      setInputType: (type) =>
+        set({
+          inputType: type,
+          inputText: '',
+          parsedSchema: null,
+          parseError: null,
+        }),
+
+      setParsedSchema: (schema) => set({ parsedSchema: schema }),
+
+      setParseError: (error) => set({ parseError: error }),
+
+      setSelectedTable: (table) => set({ selectedTable: table }),
+
+      setSearchQuery: (query) => set({ searchQuery: query }),
+
+      setActiveTab: (tab) => set({ activeTab: tab }),
+
+      setCompareOldText: (text) => set({ compareOldText: text }),
+      setCompareNewText: (text) => set({ compareNewText: text }),
+      setCompareSchema: (schema) => set({ compareSchema: schema }),
+      setCompareError: (error) => set({ compareError: error }),
+
+      clear: () => {
+        localStorage.removeItem(STORAGE_KEY);
+        set(initialState);
+      },
     }),
-
-  setParsedSchema: (schema) => set({ parsedSchema: schema }),
-
-  setParseError: (error) => set({ parseError: error }),
-
-  setSelectedTable: (table) => set({ selectedTable: table }),
-
-  setSearchQuery: (query) => set({ searchQuery: query }),
-
-  setActiveTab: (tab) => set({ activeTab: tab }),
-
-  setCompareOldText: (text) => set({ compareOldText: text }),
-  setCompareNewText: (text) => set({ compareNewText: text }),
-  setCompareSchema: (schema) => set({ compareSchema: schema }),
-  setCompareError: (error) => set({ compareError: error }),
-
-  clear: () => set(initialState),
-}));
+    {
+      name: STORAGE_KEY,
+      partialize: (state) => ({
+        inputText: state.inputText,
+        compareOldText: state.compareOldText,
+        compareNewText: state.compareNewText,
+      }),
+    }
+  )
+);
