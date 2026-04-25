@@ -3,6 +3,7 @@
 import React from 'react';
 import { Handle, Position } from '@xyflow/react';
 import type { TableNodeData } from '@/types/viewer';
+import { getColumnIcon, getConstraintIcon } from '@/lib/utils/column-icons';
 
 interface TableNodeProps {
   data: TableNodeData;
@@ -26,6 +27,9 @@ const TableNode = React.memo(function TableNode({ data }: TableNodeProps) {
           const isPK = col.constraints.includes('primary key');
           const isFK = col.constraints.includes('foreign key');
 
+          const TypeIcon = getColumnIcon(col.type, []);
+          const ConstraintIcon = getConstraintIcon(col.constraints);
+
           return (
             <div
               key={col.name}
@@ -39,25 +43,33 @@ const TableNode = React.memo(function TableNode({ data }: TableNodeProps) {
                 className="!opacity-0 !w-2 !h-2"
               />
 
-              {/* Badges */}
-              <div className="flex gap-1 shrink-0">
-                {isPK && (
-                  <span className="text-[10px] font-bold text-red-600">PK</span>
-                )}
-                {isFK && (
-                  <span className="text-[10px] font-bold text-blue-600">FK</span>
-                )}
-              </div>
+              {/* Type icon */}
+              {TypeIcon && (
+                <TypeIcon className="w-3 h-3 text-slate-400 shrink-0" />
+              )}
 
               {/* Column name */}
               <span className="font-medium text-slate-700 truncate">
                 {col.name}
               </span>
 
-              {/* Column type */}
-              <span className="ml-auto text-slate-400 truncate">
-                {col.type}
-              </span>
+              {/* Constraint icon + type */}
+              <div className="ml-auto flex items-center gap-1.5 shrink-0">
+                {ConstraintIcon && (
+                  <ConstraintIcon
+                    className={`w-3 h-3 ${
+                      isPK
+                        ? 'text-amber-500'
+                        : isFK
+                        ? 'text-blue-500'
+                        : 'text-slate-400'
+                    }`}
+                  />
+                )}
+                <span className="text-slate-400 truncate">
+                  {col.type}
+                </span>
+              </div>
 
               {/* Right handle (source) */}
               <Handle
