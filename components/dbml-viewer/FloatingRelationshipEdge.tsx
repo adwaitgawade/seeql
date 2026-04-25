@@ -25,6 +25,23 @@ const FloatingRelationshipEdge = React.memo(function FloatingRelationshipEdge(
   const targetNode = useInternalNode(target);
   const edgeData = data as RelationshipEdgeData | undefined;
 
+  const diffStatus = edgeData?.diffStatus;
+
+  const baseStyle = { strokeWidth: 2 };
+  const diffStyle =
+    diffStatus === 'added'
+      ? { stroke: '#22c55e' }
+      : diffStatus === 'removed'
+      ? { stroke: '#ef4444', strokeDasharray: '5,5' }
+      : { stroke: '#94a3b8' };
+
+  const labelBgClass =
+    diffStatus === 'added'
+      ? 'bg-green-950 border-green-700 text-green-200'
+      : diffStatus === 'removed'
+      ? 'bg-red-950 border-red-700 text-red-200'
+      : 'bg-zinc-900 text-zinc-300 border-zinc-700';
+
   // Fallback to standard bezier if nodes not yet measured
   if (!sourceNode || !targetNode) {
     const [edgePath] = getBezierPath({
@@ -40,7 +57,7 @@ const FloatingRelationshipEdge = React.memo(function FloatingRelationshipEdge(
       <BaseEdge
         id={id}
         path={edgePath}
-        style={{ stroke: '#94a3b8', strokeWidth: 2 }}
+        style={{ ...baseStyle, ...diffStyle }}
       />
     );
   }
@@ -69,7 +86,7 @@ const FloatingRelationshipEdge = React.memo(function FloatingRelationshipEdge(
       <BaseEdge
         id={id}
         path={edgePath}
-        style={{ stroke: '#94a3b8', strokeWidth: 2 }}
+        style={{ ...baseStyle, ...diffStyle }}
       />
       <EdgeLabelRenderer>
         <div
@@ -78,7 +95,7 @@ const FloatingRelationshipEdge = React.memo(function FloatingRelationshipEdge(
             transform: `translate(-50%, -50%) translate(${labelX}px, ${labelY}px)`,
             pointerEvents: 'all',
           }}
-          className="bg-zinc-900 text-zinc-300 text-[10px] border border-zinc-700 shadow-sm px-1.5 py-0.5 rounded"
+          className={`text-[10px] border shadow-sm px-1.5 py-0.5 rounded ${labelBgClass}`}
         >
           {edgeData?.relationType}
         </div>
