@@ -26,10 +26,31 @@ export function applyGridLayout(
     return { nodes, edges };
   }
 
+  // Identify connected node IDs (nodes that appear in at least one edge)
+  const connectedIds = new Set<string>();
+  for (const edge of edges) {
+    connectedIds.add(edge.source);
+    connectedIds.add(edge.target);
+  }
+
+  // Separate connected and isolated nodes
+  const connectedNodes: Node<TableNodeData>[] = [];
+  const isolatedNodes: Node<TableNodeData>[] = [];
+  for (const node of nodes) {
+    if (connectedIds.has(node.id)) {
+      connectedNodes.push(node);
+    } else {
+      isolatedNodes.push(node);
+    }
+  }
+
+  // Place connected nodes first, then isolated nodes at the bottom
+  const orderedNodes = [...connectedNodes, ...isolatedNodes];
+
   // Group nodes into rows
   const rows: Node<TableNodeData>[][] = [];
-  for (let i = 0; i < nodes.length; i += GRID_COLUMNS) {
-    rows.push(nodes.slice(i, i + GRID_COLUMNS));
+  for (let i = 0; i < orderedNodes.length; i += GRID_COLUMNS) {
+    rows.push(orderedNodes.slice(i, i + GRID_COLUMNS));
   }
 
   // Compute row heights (max node height in each row)
@@ -38,7 +59,7 @@ export function applyGridLayout(
   );
 
   // Position nodes
-  const positionedNodes = nodes.map((node, index) => {
+  const positionedNodes = orderedNodes.map((node, index) => {
     const row = Math.floor(index / GRID_COLUMNS);
     const col = index % GRID_COLUMNS;
 
