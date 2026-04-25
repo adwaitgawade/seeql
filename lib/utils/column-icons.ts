@@ -114,6 +114,15 @@ export const typeIcons: Record<string, LucideIcon> = {
  * 2. Type-based icons (int → Hash, datetime → Calendar, etc.)
  * 3. null if no icon matches
  */
+/**
+ * Returns the appropriate Lucide icon for a column based on its constraints and type.
+ * Handles types with size/precision like VARCHAR(255).
+ *
+ * Priority:
+ * 1. Constraint-based icons (PK → Key, FK → ChevronsLeftRightEllipsis)
+ * 2. Type-based icons (int → Hash, datetime → Calendar, etc.)
+ * 3. null if no icon matches
+ */
 export function getColumnIcon(
   type: string,
   constraints: Constraint[]
@@ -125,7 +134,7 @@ export function getColumnIcon(
   }
 
   // Fall back to type-based icon
-  return typeIcons[type.toLowerCase()] || null;
+  return typeIcons[normalizeType(type)] || null;
 }
 
 /**
@@ -143,8 +152,17 @@ export function getConstraintIcon(
 }
 
 /**
+ * Strips size/precision from a type string.
+ * Examples: "VARCHAR(255)" → "varchar", "DECIMAL(10,2)" → "decimal"
+ */
+function normalizeType(type: string): string {
+  return type.toLowerCase().replace(/\s*\(.*\)$/, '');
+}
+
+/**
  * Returns the type-based icon only (no constraint check).
+ * Handles types with size/precision like VARCHAR(255).
  */
 export function getTypeIcon(type: string): LucideIcon | null {
-  return typeIcons[type.toLowerCase()] || null;
+  return typeIcons[normalizeType(type)] || null;
 }

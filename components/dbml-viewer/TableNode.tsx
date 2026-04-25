@@ -3,7 +3,7 @@
 import React from 'react';
 import { Handle, Position } from '@xyflow/react';
 import type { TableNodeData } from '@/types/viewer';
-import { getColumnIcon, getConstraintIcon } from '@/lib/utils/column-icons';
+import { getTypeIcon, getConstraintIcon } from '@/lib/utils/column-icons';
 
 interface TableNodeProps {
   data: TableNodeData;
@@ -26,9 +26,16 @@ const TableNode = React.memo(function TableNode({ data }: TableNodeProps) {
         {columns.map((col) => {
           const isPK = col.constraints.includes('primary key');
           const isFK = col.constraints.includes('foreign key');
+          const isNotNull = col.constraints.includes('not null');
 
-          const TypeIcon = getColumnIcon(col.type, []);
+          const TypeIcon = getTypeIcon(col.type);
           const ConstraintIcon = getConstraintIcon(col.constraints);
+
+          // Constraint icon color
+          let constraintColor = 'text-slate-400';
+          if (isPK) constraintColor = 'text-amber-500';
+          else if (isFK) constraintColor = 'text-blue-500';
+          else if (isNotNull) constraintColor = 'text-red-500';
 
           return (
             <div
@@ -56,17 +63,9 @@ const TableNode = React.memo(function TableNode({ data }: TableNodeProps) {
               {/* Constraint icon + type */}
               <div className="ml-auto flex items-center gap-1.5 shrink-0">
                 {ConstraintIcon && (
-                  <ConstraintIcon
-                    className={`w-3 h-3 ${
-                      isPK
-                        ? 'text-amber-500'
-                        : isFK
-                        ? 'text-blue-500'
-                        : 'text-slate-400'
-                    }`}
-                  />
+                  <ConstraintIcon className={`w-3 h-3 ${constraintColor}`} />
                 )}
-                <span className="text-slate-400 truncate">
+                <span className="text-slate-400 truncate uppercase">
                   {col.type}
                 </span>
               </div>
