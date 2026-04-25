@@ -1,0 +1,137 @@
+'use client';
+
+import React from 'react';
+import {
+  ReactFlow,
+  Background,
+  Controls,
+  MiniMap,
+  useNodesState,
+  useEdgesState,
+  type Node,
+  type Edge,
+} from '@xyflow/react';
+import '@xyflow/react/dist/style.css';
+
+import { useViewerStore } from '@/lib/store/viewer-store';
+import { transformDBMLToFlow } from '@/lib/transformers/dbml-to-flow';
+import { transformSQLToFlow } from '@/lib/transformers/sql-to-flow';
+import { applyDagreLayout } from '@/lib/layout/dagre-layout';
+import type { TableNodeData, RelationshipEdgeData } from '@/types/viewer';
+
+import TableNode from './TableNode';
+import RelationshipEdge from './RelationshipEdge';
+import SearchBar from './SearchBar';
+import ExportButton from './ExportButton';
+import TableDetailsPanel from './TableDetailsPanel';
+
+const nodeTypes = { tableNode: TableNode };
+const edgeTypes = { relationshipEdge: RelationshipEdge };
+
+const DiagramTab = React.memo(function DiagramTab() {
+  const parsedSchema = useViewerStore((state) => state.parsedSchema);
+  const inputType = useViewerStore((state) => state.inputType);
+  const searchQuery = useViewerStore((state) => state.searchQuery);
+  const setSelectedTable = useViewerStore((state) => state.setSelectedTable);
+
+  const [nodes, setNodes, onNodesChange] = useNodesState<TableNodeData>([]);
+  const [edges, setEdges, onEdgesChange] = useEdgesState<RelationshipEdgeData>([]);
+
+  const hasData = parsedSchema && parsedSchema.tables.length > 0;
+
+  React.useEffect(() => {
+    if (!parsedSchema || parsedSchema.tables.length === 0) {
+      setNodes([]);
+      setEdges([]);
+      return;
+    }
+
+    let result: { nodes: Node<TableNodeData>[]; edges: Edge<RelationshipEdgeData>[] };
+
+    if (inputType === 'postgresql') {
+      result = transformSQLToFlow(parsedSchema.tables, parsedSchema.relationships);
+    } else {
+      result = transformDBMLToFlow(parsedSchema.tables, parsedSchema.relationships);
+    }
+
+    const laidOut = applyDagreLayout(result.nodes, result.edges);
+    setNodes(laidOut.nodes);
+    setEdges(laidOut.edges);
+  }, [parsedSchema, inputType, setNodes, setEdges]);
+
+  const filteredNodes = React.useMemo(() => {
+    const query = searchQuery.trim().toLowerCase();
+    if (!query) return nodes;
+
+    return nodes.map((node) => {
+      const match = node.data.tableName.toLowerCase().includes(query);
+      return {
+        ...node,
+        style: {
+          ...node.style,
+          opacity: match ? 1 : 0.2,
+        },
+      };
+    });
+  }, [nodes, searchQuery]);
+
+  const handleNodeClick = React.useCallback(
+    (_event: React.MouseEvent, node: Node<TableNodeData>) => {
+      setSelectedTable(node.data.tableName);
+    },
+    [setSelectedTable]
+  );
+
+  const handlePaneClick = React.useCallback(() => {
+    setSelectedTable(null);
+  }, [setSelectedTable]);
+
+  return (
+    <div className="relative w-full h-full">
+      {hasData ? (
+        <>
+          <ReactFlow
+            nodes={filteredNodes}
+            edges={edges}
+            nodeTypes={nodeTypes}
+            edgeTypes={edgeTypes}
+            onNodesChange={onNodesChange}
+            onEdgesChange={onEdgesChange}
+            onNodeClick={handleNodeClick}
+            onPaneClick={handlePaneClick}
+            fitView
+            minZoom={0.1}
+            maxZoom={2}
+            className="bg-slate-50"
+          >
+            <Background />
+            <Controls />
+            <MiniMap
+              className="!bg-white !border !border-slate-200 !rounded-lg"
+            />
+          </ReactFlow>
+
+          {/* Toolbar */}
+          <div className="absolute top-4 left-4 right-4 flex justify-between items-start pointer-events-none z-30">
+            <div className="pointer-events-auto">
+              <SearchBar />
+            </div>
+            <div className="pointer-events-auto">
+              <ExportButton />
+            </div>
+          </div>
+
+          {/* Details Panel */}
+          <TableDetailsPanel />
+        </>
+      ) : (
+        <div className="flex flex-col items-center justify-center h-full text-slate-400">
+          <p className="text-lg font-medium">No diagram to display</p>
+          <p className="text-sm mt-1">Enter a schema in the editor and click Parse to visualize</p>
+        </div>
+      )}
+    </div>
+  );
+});
+
+export default DiagramTab;
