@@ -10,7 +10,7 @@ import {
 import type { RelationshipEdgeData } from '@/types/viewer';
 
 const RelationshipEdge = React.memo(function RelationshipEdge(
-  props: EdgeProps<RelationshipEdgeData>
+  props: EdgeProps
 ) {
   const {
     id,
@@ -22,6 +22,7 @@ const RelationshipEdge = React.memo(function RelationshipEdge(
     targetPosition,
     data,
   } = props;
+  const edgeData = data as RelationshipEdgeData | undefined;
 
   const [edgePath, labelX, labelY] = getSmoothStepPath({
     sourceX,
@@ -48,7 +49,7 @@ const RelationshipEdge = React.memo(function RelationshipEdge(
           }}
           className="bg-white text-slate-500 text-[10px] border border-slate-200 shadow-sm px-1.5 py-0.5 rounded"
         >
-          {data?.relationType}
+          {edgeData?.relationType}
         </div>
       </EdgeLabelRenderer>
     </>

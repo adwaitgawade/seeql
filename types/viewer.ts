@@ -14,21 +14,21 @@ export interface Index {
   unique: boolean;
 }
 
-export interface TableNodeData {
+export type TableNodeData = Record<string, unknown> & {
   tableName: string;
   schemaName?: string;
   columns: Column[];
   indexes: Index[];
   notes?: string;
-}
+};
 
 export type RelationshipType = '1:1' | '1:N' | 'N:1';
 
-export interface RelationshipEdgeData {
+export type RelationshipEdgeData = Record<string, unknown> & {
   relationType: RelationshipType;
   sourceColumn: string;
   targetColumn: string;
-}
+};
 
 export type InputType = 'dbml' | 'postgresql';
 
