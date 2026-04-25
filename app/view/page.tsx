@@ -1,9 +1,5 @@
-import React from 'react'
+import ViewPage from '@/components/dbml-viewer/ViewPage';
 
-const page = () => {
-    return (
-        <div>page</div>
-    )
+export default function ViewPageRoute() {
+  return <ViewPage />;
 }
-
-export default page
