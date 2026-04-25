@@ -78,8 +78,9 @@ describe('compareSchemas', () => {
   });
 
   it('marks everything unchanged when schemas are identical', () => {
-    const s = schema([table('users', [{ name: 'id', type: 'int' }])], [rel('users.id', 'profiles.user_id')]);
-    const result = compareSchemas(s, s);
+    const oldSchema = schema([table('users', [{ name: 'id', type: 'int' }])], [rel('users.id', 'profiles.user_id')]);
+    const newSchema = schema([table('users', [{ name: 'id', type: 'int' }])], [rel('users.id', 'profiles.user_id')]);
+    const result = compareSchemas(oldSchema, newSchema);
 
     expect(result.tables[0].diffStatus).toBe('unchanged');
     expect(result.tables[0].columns[0].diffStatus).toBe('unchanged');
@@ -120,5 +121,37 @@ describe('compareSchemas', () => {
     expect(result.tables.find(t => t.tableName === 'posts')?.diffStatus).toBe('removed');
     expect(result.tables.find(t => t.tableName === 'users')?.diffStatus).toBe('unchanged');
     expect(result.tables.find(t => t.tableName === 'users')?.columns.find(c => c.name === 'email')?.diffStatus).toBe('removed');
+  });
+
+  it('returns empty tables and relationships when both schemas are empty', () => {
+    const empty = schema([], []);
+    const result = compareSchemas(empty, empty);
+
+    expect(result.tables).toEqual([]);
+    expect(result.relationships).toEqual([]);
+  });
+
+  it('marks everything as added when comparing empty to a schema', () => {
+    const empty = schema([], []);
+    const newSchema = schema([table('users', [{ name: 'id', type: 'int' }])], [rel('users.id', 'profiles.user_id')]);
+    const result = compareSchemas(empty, newSchema);
+
+    expect(result.tables).toHaveLength(1);
+    expect(result.tables[0].diffStatus).toBe('added');
+    expect(result.tables[0].columns.every(c => c.diffStatus === 'added')).toBe(true);
+    expect(result.relationships).toHaveLength(1);
+    expect(result.relationships[0].diffStatus).toBe('added');
+  });
+
+  it('marks everything as removed when comparing a schema to empty', () => {
+    const oldSchema = schema([table('users', [{ name: 'id', type: 'int' }])], [rel('users.id', 'profiles.user_id')]);
+    const empty = schema([], []);
+    const result = compareSchemas(oldSchema, empty);
+
+    expect(result.tables).toHaveLength(1);
+    expect(result.tables[0].diffStatus).toBe('removed');
+    expect(result.tables[0].columns.every(c => c.diffStatus === 'removed')).toBe(true);
+    expect(result.relationships).toHaveLength(1);
+    expect(result.relationships[0].diffStatus).toBe('removed');
   });
 });
