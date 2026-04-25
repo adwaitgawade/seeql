@@ -7,6 +7,7 @@ import InputTypeToggle from './InputTypeToggle';
 import ExportButton from './ExportButton';
 import EditorTab from './EditorTab';
 import DiagramTab from './DiagramTab';
+import CompareTab from './CompareTab';
 import { parseDBML } from '@/lib/parsers/dbml-parser';
 import { parseSQL } from '@/lib/parsers/sql-parser';
 
@@ -26,7 +27,7 @@ export default function ViewPage() {
   // Sync URL with tab state on mount / when URL changes externally
   useEffect(() => {
     const tabParam = searchParams?.get('tab');
-    if (tabParam === 'editor' || tabParam === 'diagram') {
+    if (tabParam === 'editor' || tabParam === 'diagram' || tabParam === 'compare') {
       setActiveTab(tabParam);
     }
   }, [searchParams, setActiveTab]);
@@ -61,7 +62,7 @@ export default function ViewPage() {
     };
   }, [inputText, inputType, setParsedSchema, setParseError]);
 
-  const handleTabChange = (tab: 'editor' | 'diagram') => {
+  const handleTabChange = (tab: 'editor' | 'diagram' | 'compare') => {
     setActiveTab(tab);
     const params = new URLSearchParams(searchParams?.toString() || '');
     params.set('tab', tab);
@@ -103,11 +104,25 @@ export default function ViewPage() {
         >
           Diagram
         </button>
+        <button
+          type="button"
+          onClick={() => handleTabChange('compare')}
+          className={[
+            'px-4 py-2 text-sm transition-colors',
+            activeTab === 'compare'
+              ? 'border-b-2 border-zinc-100 text-zinc-100 font-medium'
+              : 'text-zinc-500 hover:text-zinc-300',
+          ].join(' ')}
+        >
+          Compare
+        </button>
       </div>
 
       {/* Content area */}
       <div className="flex-1 overflow-hidden">
-        {activeTab === 'editor' ? <EditorTab /> : <DiagramTab />}
+        {activeTab === 'editor' && <EditorTab />}
+        {activeTab === 'diagram' && <DiagramTab />}
+        {activeTab === 'compare' && <CompareTab />}
       </div>
     </div>
   );
