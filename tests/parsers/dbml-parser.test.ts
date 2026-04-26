@@ -107,6 +107,36 @@ ref: profiles.user_id - users.id
     expect(rel.relationType).toBe('1:1');
   });
 
+  it('should infer PK from indexes block when not on column definition', () => {
+    const dbml = `
+table account {
+  id text [not null]
+  accountId text [not null]
+
+  indexes {
+    id [pk]
+  }
+}
+
+table alembic_version {
+  version_num varchar(32) [pk, not null]
+}
+`;
+    const result = parseDBML(dbml);
+
+    const account = result.tables.find((t) => t.tableName === 'account');
+    expect(account).toBeDefined();
+    const accountIdCol = account!.columns.find((c) => c.name === 'id');
+    expect(accountIdCol!.constraints).toContain('primary key');
+    expect(accountIdCol!.constraints).toContain('not null');
+
+    const alembic = result.tables.find((t) => t.tableName === 'alembic_version');
+    expect(alembic).toBeDefined();
+    const versionCol = alembic!.columns.find((c) => c.name === 'version_num');
+    expect(versionCol!.constraints).toContain('primary key');
+    expect(versionCol!.constraints).toContain('not null');
+  });
+
   it('should throw on invalid dbml', () => {
     expect(() => parseDBML('not valid dbml')).toThrow();
   });

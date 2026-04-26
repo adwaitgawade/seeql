@@ -15,6 +15,7 @@ export interface Index {
   name: string;
   columns: string[];
   unique: boolean;
+  pk?: boolean;
 }
 
 export type TableNodeData = Record<string, unknown> & {

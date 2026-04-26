@@ -26,22 +26,37 @@ export function parseDBML(input: string): ParsedSchema {
     const exported = database.export();
     const schema = exported.schemas?.[0];
 
-    const tables: TableNodeData[] = (schema?.tables || []).map((table: any) => ({
-      tableName: table.name,
-      schemaName: table.schemaName || undefined,
-      columns: (table.fields || []).map((field: any) => ({
-        name: field.name,
-        type: field.type?.type_name || 'unknown',
-        constraints: mapConstraints(field),
-        notes: field.note || undefined,
-      })),
-      indexes: (table.indexes || []).map((idx: any, i: number): Index => ({
+    const tables: TableNodeData[] = (schema?.tables || []).map((table: any) => {
+      const indexes: Index[] = (table.indexes || []).map((idx: any, i: number): Index => ({
         name: idx.columns?.map((c: any) => c.value).join('_') || `idx_${i}`,
         columns: (idx.columns || []).map((c: any) => c.value),
         unique: !!idx.unique,
-      })),
-      notes: table.note || undefined,
-    }));
+        pk: !!idx.pk,
+      }));
+
+      const pkColumns = new Set(
+        indexes.filter((idx) => idx.pk).flatMap((idx) => idx.columns)
+      );
+
+      return {
+        tableName: table.name,
+        schemaName: table.schemaName || undefined,
+        columns: (table.fields || []).map((field: any) => {
+          const constraints = mapConstraints(field);
+          if (pkColumns.has(field.name) && !constraints.includes('primary key')) {
+            constraints.push('primary key');
+          }
+          return {
+            name: field.name,
+            type: field.type?.type_name || 'unknown',
+            constraints,
+            notes: field.note || undefined,
+          };
+        }),
+        indexes,
+        notes: table.note || undefined,
+      };
+    });
 
     const relationships: RelationshipEdgeData[] = (schema?.refs || []).map((ref: any) => {
       const source = ref.endpoints[0];
