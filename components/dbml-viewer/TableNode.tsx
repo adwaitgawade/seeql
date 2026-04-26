@@ -42,7 +42,9 @@ const TableNode = React.memo(function TableNode({ data }: TableNodeProps) {
       {/* Columns */}
       <div className="divide-y divide-zinc-800 border-[0.1px] border-zinc-700 bg-black">
         {columns.map((col) => {
+          const isPk = col.constraints.includes('primary key');
           const TypeIcon = getTypeIcon(col.type);
+          const PkIcon = isPk ? getConstraintIcon(['primary key']) : null;
           const rowClass = columnRowClass(col.diffStatus);
 
           return (
@@ -58,10 +60,14 @@ const TableNode = React.memo(function TableNode({ data }: TableNodeProps) {
                 className="opacity-0! w-2! h-2!"
               />
 
-              {/* Type icon */}
-              {TypeIcon && (
-                <TypeIcon className="w-3 h-3 text-zinc-500 shrink-0" />
-              )}
+              {/* Left icon: Key for PK, otherwise type icon */}
+              {PkIcon ?
+                <PkIcon className="w-3 h-3 text-amber-500 shrink-0" />
+                :
+                TypeIcon ?
+                  <TypeIcon className="w-3 h-3 text-zinc-500 shrink-0" />
+                  : null
+              }
 
               {/* Column name */}
               <span className="font-medium truncate">
@@ -73,30 +79,33 @@ const TableNode = React.memo(function TableNode({ data }: TableNodeProps) {
                 <span className="text-zinc-500 truncate uppercase">
                   {col.type}
                 </span>
-                {col.constraints.map((constraint) => {
-                  const Icon = getConstraintIcon([constraint]);
-                  const badge = constraintBadges[constraint];
+                {col.constraints
+                  .filter((constraint) => constraint !== 'primary key')
+                  .map((constraint) => {
+                    const Icon = getConstraintIcon([constraint]);
+                    const badge = constraintBadges[constraint];
 
-                  if (Icon) {
-                    let color = 'text-zinc-500';
-                    if (constraint === 'primary key') color = 'text-amber-500';
-                    else if (constraint === 'foreign key') color = 'text-blue-500';
-                    return <Icon key={constraint} className={`w-3 h-3 ${color}`} />;
-                  }
+                    if (Icon) {
+                      const color =
+                        constraint === 'foreign key'
+                          ? 'text-blue-500'
+                          : 'text-zinc-500';
+                      return <Icon key={constraint} className={`w-3 h-3 ${color}`} />;
+                    }
 
-                  if (badge) {
-                    return (
-                      <span
-                        key={constraint}
-                        className={`text-[9px] font-bold ${badge.colorClass}`}
-                      >
-                        {badge.label}
-                      </span>
-                    );
-                  }
+                    if (badge) {
+                      return (
+                        <span
+                          key={constraint}
+                          className={`text-[9px] font-bold ${badge.colorClass}`}
+                        >
+                          {badge.label}
+                        </span>
+                      );
+                    }
 
-                  return null;
-                })}
+                    return null;
+                  })}
               </div>
 
               {/* Right handle (source) */}
