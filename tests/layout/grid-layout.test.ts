@@ -100,24 +100,64 @@ describe('grid layout', () => {
 
     const { nodes: positioned } = applyGridLayout(nodes, edges);
 
-    // Connected nodes should come first
-    expect(positioned[0].id).toBe('connected_a');
-    expect(positioned[1].id).toBe('connected_b');
-    expect(positioned[2].id).toBe('connected_c');
-    expect(positioned[3].id).toBe('connected_d');
+    // Connected nodes should come first (sorted by component size, stable within component)
+    const connectedIds = positioned.slice(0, 4).map((n) => n.id);
+    expect(connectedIds).toContain('connected_a');
+    expect(connectedIds).toContain('connected_b');
+    expect(connectedIds).toContain('connected_c');
+    expect(connectedIds).toContain('connected_d');
 
     // Isolated nodes should come after connected nodes
-    expect(positioned[4].id).toBe('isolated1');
-    expect(positioned[5].id).toBe('isolated2');
-    expect(positioned[6].id).toBe('isolated3');
+    const isolatedIds = positioned.slice(4).map((n) => n.id);
+    expect(isolatedIds).toContain('isolated1');
+    expect(isolatedIds).toContain('isolated2');
+    expect(isolatedIds).toContain('isolated3');
 
-    // First row should only have connected nodes
-    expect(positioned[0].position.y).toBe(0);
-    expect(positioned[1].position.y).toBe(0);
-    expect(positioned[2].position.y).toBe(0);
-    expect(positioned[3].position.y).toBe(0);
+    // Isolated nodes should be below all connected nodes
+    const maxConnectedY = Math.max(
+      ...positioned.slice(0, 4).map((n) => n.position.y)
+    );
+    const minIsolatedY = Math.min(
+      ...positioned.slice(4).map((n) => n.position.y)
+    );
+    expect(minIsolatedY).toBeGreaterThan(maxConnectedY);
+  });
 
-    // Isolated nodes should be on subsequent rows (after the first row)
-    expect(positioned[4].position.y).toBeGreaterThan(0);
+  it('should separate different connected components with extra vertical gap', () => {
+    const nodes = [
+      makeNode('group1_a', 1),
+      makeNode('group1_b', 1),
+      makeNode('group2_a', 1),
+      makeNode('group2_b', 1),
+    ];
+
+    const edges: Edge<RelationshipEdgeData>[] = [
+      {
+        id: 'e1',
+        source: 'group1_a',
+        target: 'group1_b',
+        type: 'floatingRelationshipEdge',
+        data: { relationType: 'N:1', sourceColumn: 'group1_a.x', targetColumn: 'group1_b.y' },
+      },
+      {
+        id: 'e2',
+        source: 'group2_a',
+        target: 'group2_b',
+        type: 'floatingRelationshipEdge',
+        data: { relationType: 'N:1', sourceColumn: 'group2_a.x', targetColumn: 'group2_b.y' },
+      },
+    ];
+
+    const { nodes: positioned } = applyGridLayout(nodes, edges);
+
+    const group1Nodes = positioned.filter((n) => n.id.startsWith('group1_'));
+    const group2Nodes = positioned.filter((n) => n.id.startsWith('group2_'));
+
+    // First component should be at the top
+    expect(group1Nodes[0].position.y).toBe(0);
+
+    // Second component should be below the first with extra gap
+    const group1Height = Math.max(...group1Nodes.map((n) => n.position.y)) + 120; // approximate node height
+    expect(group2Nodes[0].position.y).toBeGreaterThan(group1Height);
   });
 });
