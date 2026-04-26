@@ -61,6 +61,7 @@ export const typeIcons: Record<string, LucideIcon> = {
   // String
   'varchar': Type,
   'nvarchar': Type,
+  'character varying': Type,
   'text': FileText,
   'char': Type,
   'string': Type,

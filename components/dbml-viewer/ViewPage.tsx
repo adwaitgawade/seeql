@@ -74,7 +74,7 @@ export default function ViewPage() {
     <div className="flex flex-col h-screen bg-background text-foreground">
       {/* Header */}
       <header className="flex items-center justify-between p-4 border-b border-border">
-        <h1 className="text-xl font-bold">DBML Viewer</h1>
+        <h1 className="text-xl font-bold">SEEQL Viewer</h1>
         <InputTypeToggle />
         <ExportButton />
       </header>

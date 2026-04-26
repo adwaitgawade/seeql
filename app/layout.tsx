@@ -18,7 +18,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "DBML Viewer",
+  title: "SEEQL Viewer",
   description: "Visualize DBML and SQL schemas",
 };
 
