@@ -32,6 +32,9 @@ export default function RootLayout({
       lang="en"
       className={`${spaceGrotesk.variable} ${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
+      {/* Umami Web Analytics */}
+      <script defer src="https://cloud.umami.is/script.js" data-website-id="0cd25443-b5c5-4302-ac09-e187d819e6e6"></script>
+      {/* Google Search Console */}
       <meta name="google-site-verification" content="hJYTWvSFqlnAXCRDpD_b5epWu-E00NTQIFWLVWrWbAo" />
       <body className="min-h-full flex flex-col">{children}</body>
     </html>
