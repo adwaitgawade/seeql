@@ -14,9 +14,17 @@ const GROUP_VERTICAL_GAP = 120;
 
 function getNodeHeight(node: Node<TableNodeData>): number {
   const columnCount = node.data.columns?.length || 0;
-  const headerHeight = 36;
-  const rowHeight = 28;
-  return Math.max(120, headerHeight + columnCount * rowHeight);
+  const headerHeight = 36; // py-2 (16px) + text-sm line-height (20px)
+  const rowHeight = 32; // py-1.5 (12px) + text-sm line-height (20px)
+  const dividerHeight = 1; // divide-y between rows
+  const outerBorderHeight = 2; // 1px top + 1px bottom border on the card
+  return Math.max(
+    120,
+    headerHeight +
+      columnCount * rowHeight +
+      Math.max(0, columnCount - 1) * dividerHeight +
+      outerBorderHeight
+  );
 }
 
 function findConnectedComponents(
