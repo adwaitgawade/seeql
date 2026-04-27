@@ -1,0 +1,135 @@
+// ============================================
+// User Management System (Modified)
+// ============================================
+
+Table users {
+  id uuid [pk, default: `gen_random_uuid()`]
+  email varchar(255) [unique, not null]
+  password_hash varchar(255) [not null, note: 'bcrypt hash']
+  username varchar(50) [unique]
+  status user_status [not null, default: 'pending']
+  email_verified_at timestamptz
+  failed_login_attempts int [default: 0]
+  locked_until timestamptz
+  last_login_at timestamptz [note: 'ADDED: tracks most recent login']
+  mfa_enabled bool [default: false, note: 'ADDED: multi-factor auth flag']
+  created_at timestamptz [default: `now()`]
+  updated_at timestamptz [default: `now()`]
+  deleted_at timestamptz [note: 'soft delete']
+
+  indexes {
+    email
+    status
+    deleted_at
+  }
+}
+
+Enum user_status {
+  active
+  inactive
+  pending
+  suspended
+}
+
+Table user_profiles {
+  id uuid [pk, default: `gen_random_uuid()`]
+  user_id uuid [not null, unique]
+  first_name varchar(100)
+  last_name varchar(100)
+  display_name varchar(100)
+  phone varchar(20)
+  timezone varchar(50) [default: 'UTC']
+  created_at timestamptz [default: `now()`]
+  updated_at timestamptz [default: `now()`]
+}
+
+Table roles {
+  id uuid [pk, default: `gen_random_uuid()`]
+  name varchar(50) [unique, not null]
+  slug varchar(50) [unique, not null]
+  description text
+  is_system bool [default: false, note: 'prevents deletion']
+  created_at timestamptz [default: `now()`]
+}
+
+Table user_roles {
+  user_id uuid [not null]
+  role_id uuid [not null]
+  assigned_by uuid [not null]
+  assigned_at timestamptz [default: `now()`]
+
+  indexes {
+    (user_id, role_id) [pk]
+  }
+}
+
+Table permissions {
+  id uuid [pk, default: `gen_random_uuid()`]
+  name varchar(100) [unique, not null]
+  slug varchar(100) [unique, not null]
+  resource varchar(50) [not null, note: 'e.g. users, posts, billing']
+  action varchar(50) [not null, note: 'e.g. create, read, update, delete']
+  description text
+  created_at timestamptz [default: `now()`]
+}
+
+Table role_permissions {
+  role_id uuid [not null]
+  permission_id uuid [not null]
+  created_at timestamptz [default: `now()`]
+
+  indexes {
+    (role_id, permission_id) [pk]
+  }
+}
+
+Table audit_logs {
+  id bigserial [pk]
+  user_id uuid
+  action varchar(50) [not null, note: 'LOGIN, LOGOUT, UPDATE, DELETE, etc.']
+  entity_type varchar(50) [note: 'table name or resource']
+  entity_id uuid [note: 'affected record id']
+  old_values jsonb
+  new_values jsonb
+  ip_address inet
+  user_agent text
+  metadata jsonb [note: 'extra context']
+  created_at timestamptz [default: `now()`]
+
+  indexes {
+    user_id
+    action
+    entity_type
+    created_at
+    (entity_type, entity_id)
+  }
+}
+
+// NEW TABLE: Email change tracking
+Table email_changes {
+  id uuid [pk, default: `gen_random_uuid()`]
+  user_id uuid [not null]
+  old_email varchar(255) [not null]
+  new_email varchar(255) [not null]
+  verification_token_hash varchar(255) [not null]
+  verified_at timestamptz
+  expires_at timestamptz [not null]
+  created_at timestamptz [default: `now()`]
+
+  indexes {
+    user_id
+    verification_token_hash [unique]
+  }
+}
+
+// ============================================
+// Relationships
+// ============================================
+
+Ref: user_profiles.user_id > users.id [delete: cascade]
+Ref: user_roles.user_id > users.id [delete: cascade]
+Ref: user_roles.assigned_by > users.id
+Ref: role_permissions.role_id > roles.id [delete: cascade]
+Ref: role_permissions.permission_id > permissions.id [delete: cascade]
+Ref: audit_logs.user_id > users.id [delete: set null]
+Ref: email_changes.user_id > users.id [delete: cascade]

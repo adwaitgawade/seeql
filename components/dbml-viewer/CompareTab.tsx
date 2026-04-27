@@ -5,6 +5,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { parseDBML } from '@/lib/parsers/dbml-parser';
 import { compareSchemas } from '@/lib/diff/schema-diff';
 import { useViewerStore } from '@/lib/store/viewer-store';
+import { oldExample, newExample } from '@/lib/diff/example';
 
 const CompareTab = React.memo(function CompareTab() {
   const oldText = useViewerStore((state) => state.compareOldText);
@@ -15,6 +16,12 @@ const CompareTab = React.memo(function CompareTab() {
   const setCompareSchema = useViewerStore((state) => state.setCompareSchema);
   const setCompareError = useViewerStore((state) => state.setCompareError);
   const setActiveTab = useViewerStore((state) => state.setActiveTab);
+
+  const handleLoadExample = () => {
+    setCompareOldText(oldExample);
+    setCompareNewText(newExample);
+    setCompareError(null);
+  };
 
   const handleCompare = () => {
     setCompareError(null);
@@ -49,6 +56,26 @@ const CompareTab = React.memo(function CompareTab() {
   return (
     <div className="flex flex-col h-full">
       {/* Editors */}
+      {/* Action bar */}
+      <div className="flex items-center gap-4 px-4 py-3 border-b border-border">
+        <button
+          type="button"
+          onClick={handleCompare}
+          className="px-4 py-2 text-sm font-medium bg-zinc-100 text-zinc-900 rounded-md hover:bg-zinc-200 transition-colors"
+        >
+          Compare
+        </button>
+        <button
+          type="button"
+          onClick={handleLoadExample}
+          className="px-4 py-2 text-sm font-medium bg-zinc-100 text-zinc-900 rounded-md hover:bg-zinc-200 transition-colors"
+        >
+          Load Example
+        </button>
+        {compareError && (
+          <div className="text-sm text-red-400">{compareError}</div>
+        )}
+      </div>
       <div className="flex gap-4 p-4 border-b border-border" style={{ minHeight: '240px' }}>
         <div className="flex-1 flex flex-col">
           <label className="text-xs font-semibold text-zinc-400 mb-2 uppercase tracking-wider">Old DBML</label>
@@ -68,20 +95,6 @@ const CompareTab = React.memo(function CompareTab() {
             className="flex-1 min-h-0 font-mono text-sm resize-none bg-zinc-900 text-zinc-100 border-zinc-700 placeholder:text-zinc-600"
           />
         </div>
-      </div>
-
-      {/* Action bar */}
-      <div className="flex items-center gap-4 px-4 py-3 border-b border-border">
-        <button
-          type="button"
-          onClick={handleCompare}
-          className="px-4 py-2 text-sm font-medium bg-zinc-100 text-zinc-900 rounded-md hover:bg-zinc-200 transition-colors"
-        >
-          Compare
-        </button>
-        {compareError && (
-          <div className="text-sm text-red-400">{compareError}</div>
-        )}
       </div>
     </div>
   );

@@ -1,7 +1,7 @@
 "use server";
 
 import Link from 'next/link';
-import { Code, Star } from 'lucide-react';
+import { ArrowRight, Code, Star } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
@@ -75,6 +75,14 @@ export default async function Home() {
               </span>
             </a>
           </div>
+
+          <Link
+            href="/view"
+            className="mt-6 inline-flex items-center gap-2 rounded-full bg-primary text-primary-foreground px-6 py-3 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all"
+          >
+            <span>Start Designing</span>
+            <ArrowRight className="h-4 w-4" />
+          </Link>
         </header>
 
         {/* Features Grid */}
