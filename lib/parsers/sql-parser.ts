@@ -1,5 +1,5 @@
 import { Parser } from 'node-sql-parser';
-import { ParsedSchema, TableNodeData, RelationshipEdgeData, Constraint } from '@/types/viewer';
+import { ParsedSchema, TableNodeData, RelationshipEdgeData, Constraint, ParseError } from '@/types/viewer';
 
 function getColumnName(colRef: any): string {
   return colRef?.column?.expr?.value || colRef?.column || '';
@@ -134,6 +134,7 @@ export function parseSQL(input: string): ParsedSchema {
     return { tables, relationships };
   } catch (error: any) {
     const message = error?.message || 'Failed to parse SQL';
-    throw new Error(message);
+    const line = error?.location?.start?.line;
+    throw { message, line } as ParseError;
   }
 }

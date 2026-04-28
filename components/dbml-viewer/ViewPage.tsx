@@ -52,7 +52,7 @@ export default function ViewPage() {
         setParseError(null);
       } catch (error: any) {
         setParsedSchema(null);
-        setParseError(error?.message || 'Failed to parse input');
+        setParseError({ message: error?.message || 'Failed to parse input', line: error?.line });
       }
     }, 300);
 

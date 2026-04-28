@@ -1,12 +1,12 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import { InputType, ParsedSchema } from '@/types/viewer';
+import { InputType, ParsedSchema, ParseError } from '@/types/viewer';
 
 export interface ViewerState {
   inputText: string;
   inputType: InputType;
   parsedSchema: ParsedSchema | null;
-  parseError: string | null;
+  parseError: ParseError | null;
   selectedTable: string | null;
   searchQuery: string;
   activeTab: 'editor' | 'diagram' | 'compare' | 'compare-diagram';
@@ -20,7 +20,7 @@ export interface ViewerState {
   setInputText: (text: string) => void;
   setInputType: (type: InputType) => void;
   setParsedSchema: (schema: ParsedSchema | null) => void;
-  setParseError: (error: string | null) => void;
+  setParseError: (error: ParseError | null) => void;
   setSelectedTable: (table: string | null) => void;
   setSearchQuery: (query: string) => void;
   setActiveTab: (tab: 'editor' | 'diagram' | 'compare' | 'compare-diagram') => void;

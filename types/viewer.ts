@@ -42,3 +42,8 @@ export interface ParsedSchema {
   tables: TableNodeData[];
   relationships: RelationshipEdgeData[];
 }
+
+export interface ParseError {
+  message: string;
+  line?: number;
+}

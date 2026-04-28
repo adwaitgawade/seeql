@@ -1,5 +1,5 @@
 import { Parser } from '@dbml/core';
-import { ParsedSchema, TableNodeData, RelationshipEdgeData, Constraint, Index } from '@/types/viewer';
+import { ParsedSchema, TableNodeData, RelationshipEdgeData, Constraint, Index, ParseError } from '@/types/viewer';
 
 function mapConstraints(field: {
   pk?: boolean;
@@ -70,7 +70,9 @@ export function parseDBML(input: string): ParsedSchema {
 
     return { tables, relationships };
   } catch (error: any) {
-    const message = error?.diags?.[0]?.message || error?.message || 'Failed to parse DBML';
-    throw new Error(message);
+    const diag = error?.diags?.[0];
+    const message = diag?.message || error?.message || 'Failed to parse DBML';
+    const line = diag?.location?.start?.line;
+    throw { message, line } as ParseError;
   }
 }

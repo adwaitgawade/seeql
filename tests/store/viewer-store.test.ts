@@ -27,7 +27,7 @@ describe('viewer store', () => {
     const store = useViewerStore.getState();
     store.setInputText('some text');
     store.setParsedSchema({ tables: [], relationships: [] });
-    store.setParseError('some error');
+    store.setParseError({ message: 'some error' });
 
     useViewerStore.getState().setInputType('postgresql');
 
@@ -45,8 +45,8 @@ describe('viewer store', () => {
   });
 
   it('should set parse error', () => {
-    useViewerStore.getState().setParseError('syntax error');
-    expect(useViewerStore.getState().parseError).toBe('syntax error');
+    useViewerStore.getState().setParseError({ message: 'syntax error', line: 3 });
+    expect(useViewerStore.getState().parseError).toEqual({ message: 'syntax error', line: 3 });
   });
 
   it('should set selected table', () => {
@@ -69,7 +69,7 @@ describe('viewer store', () => {
     store.setInputText('text');
     store.setInputType('postgresql');
     store.setParsedSchema({ tables: [], relationships: [] });
-    store.setParseError('error');
+    store.setParseError({ message: 'error' });
     store.setSelectedTable('users');
     store.setSearchQuery('query');
     store.setActiveTab('diagram');
