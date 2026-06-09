@@ -5,7 +5,7 @@ function splitColumns(line: string): string[] {
   while (i < line.length) {
     while (i < line.length && /\s/.test(line[i])) i++;
 
-    let start = i;
+    const start = i;
 
     // column name
     while (i < line.length && !/\s/.test(line[i])) i++;
@@ -51,7 +51,7 @@ function splitIndexes(line: string): string[] {
     // Skip whitespace
     while (i < line.length && /\s/.test(line[i])) i++;
 
-    let start = i;
+    const start = i;
 
     // Parse index expression
     if (line[i] === "(") {
@@ -105,7 +105,7 @@ export function formatDBML(input: string): string {
   let insideIndexes = false;
 
   for (const rawLine of lines) {
-    let line = rawLine.trim();
+    const line = rawLine.trim();
     if (!line) continue;
 
     if (line.startsWith("Table")) insideTable = true;
