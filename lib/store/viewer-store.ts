@@ -17,6 +17,9 @@ export interface ViewerState {
   compareSchema: ParsedSchema | null;
   compareError: string | null;
 
+  // Generate DBML state
+  generateDBMLResults: string;
+
   setInputText: (text: string) => void;
   setInputType: (type: InputType) => void;
   setParsedSchema: (schema: ParsedSchema | null) => void;
@@ -29,6 +32,8 @@ export interface ViewerState {
   setCompareNewText: (text: string) => void;
   setCompareSchema: (schema: ParsedSchema | null) => void;
   setCompareError: (error: string | null) => void;
+
+  setGenerateDBMLResults: (text: string) => void;
 
   clear: () => void;
 }
@@ -45,6 +50,7 @@ const initialState = {
   compareNewText: '',
   compareSchema: null,
   compareError: null,
+  generateDBMLResults: '',
 };
 
 const STORAGE_KEY = 'dbml-viewer-store';
@@ -78,6 +84,8 @@ export const useViewerStore = create<ViewerState>()(
       setCompareNewText: (text) => set({ compareNewText: text }),
       setCompareSchema: (schema) => set({ compareSchema: schema }),
       setCompareError: (error) => set({ compareError: error }),
+
+      setGenerateDBMLResults: (text) => set({ generateDBMLResults: text }),
 
       clear: () => {
         localStorage.removeItem(STORAGE_KEY);
