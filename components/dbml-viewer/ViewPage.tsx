@@ -9,6 +9,7 @@ import EditorTab from './EditorTab';
 import DiagramTab from './DiagramTab';
 import CompareTab from './CompareTab';
 import CompareDiagramTab from './CompareDiagramTab';
+import GenerateDBMLTab from './GenerateDBMLTab';
 import { parseDBML } from '@/lib/parsers/dbml-parser';
 import { parseSQL } from '@/lib/parsers/sql-parser';
 
@@ -28,7 +29,7 @@ export default function ViewPage() {
   // Sync URL with tab state on mount / when URL changes externally
   useEffect(() => {
     const tabParam = searchParams?.get('tab');
-    if (tabParam === 'editor' || tabParam === 'diagram' || tabParam === 'compare' || tabParam === 'compare-diagram') {
+    if (tabParam === 'editor' || tabParam === 'diagram' || tabParam === 'compare' || tabParam === 'compare-diagram' || tabParam === 'generate-dbml') {
       setActiveTab(tabParam);
     }
   }, [searchParams, setActiveTab]);
@@ -63,7 +64,7 @@ export default function ViewPage() {
     };
   }, [inputText, inputType, setParsedSchema, setParseError]);
 
-  const handleTabChange = (tab: 'editor' | 'diagram' | 'compare' | 'compare-diagram') => {
+  const handleTabChange = (tab: 'editor' | 'diagram' | 'compare' | 'compare-diagram' | 'generate-dbml') => {
     setActiveTab(tab);
     const params = new URLSearchParams(searchParams?.toString() || '');
     params.set('tab', tab);
@@ -129,6 +130,18 @@ export default function ViewPage() {
         >
           Compare Diagram
         </button>
+        <button
+          type="button"
+          onClick={() => handleTabChange('generate-dbml')}
+          className={[
+            'px-4 py-2 text-sm transition-colors',
+            activeTab === 'generate-dbml'
+              ? 'border-b-2 border-zinc-100 text-zinc-100 font-medium'
+              : 'text-zinc-500 hover:text-zinc-300',
+          ].join(' ')}
+        >
+          Generate DBML
+        </button>
       </div>
 
       {/* Content area */}
@@ -137,6 +150,7 @@ export default function ViewPage() {
         {activeTab === 'diagram' && <DiagramTab />}
         {activeTab === 'compare' && <CompareTab />}
         {activeTab === 'compare-diagram' && <CompareDiagramTab />}
+        {activeTab === 'generate-dbml' && <GenerateDBMLTab />}
       </div>
     </div>
   );

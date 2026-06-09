@@ -9,7 +9,7 @@ export interface ViewerState {
   parseError: ParseError | null;
   selectedTable: string | null;
   searchQuery: string;
-  activeTab: 'editor' | 'diagram' | 'compare' | 'compare-diagram';
+  activeTab: 'editor' | 'diagram' | 'compare' | 'compare-diagram' | 'generate-dbml';
 
   // Compare feature state
   compareOldText: string;
@@ -26,7 +26,7 @@ export interface ViewerState {
   setParseError: (error: ParseError | null) => void;
   setSelectedTable: (table: string | null) => void;
   setSearchQuery: (query: string) => void;
-  setActiveTab: (tab: 'editor' | 'diagram' | 'compare' | 'compare-diagram') => void;
+  setActiveTab: (tab: 'editor' | 'diagram' | 'compare' | 'compare-diagram' | 'generate-dbml') => void;
 
   setCompareOldText: (text: string) => void;
   setCompareNewText: (text: string) => void;
